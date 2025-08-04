@@ -1,23 +1,45 @@
 import React, { useState } from 'react';
-import { Settings, Save, RotateCcw } from 'lucide-react';
+import { Save, RotateCcw, ArrowLeft } from 'lucide-react';
 
 const WordScramble = () => {
-  const [centerLetter, setCenterLetter] = useState('U');
-  const [outerLetters, setOuterLetters] = useState(['E', 'N', 'R', 'Q', 'N', 'T', 'E', 'I', 'F']);
-  const [isAdminMode, setIsAdminMode] = useState(false);
+  // Check URL for admin access
+  const urlParams = new URLSearchParams(window.location.search);
+  const isAdminFromURL = urlParams.get('admin') === 'true' || window.location.hash === '#admin';
+  
+  const [centerLetter, setCenterLetter] = useState(() => {
+    const saved = localStorage.getItem('wordScramble_centerLetter');
+    return saved || 'U';
+  });
+  const [outerLetters, setOuterLetters] = useState(() => {
+    const saved = localStorage.getItem('wordScramble_outerLetters');
+    return saved ? JSON.parse(saved) : ['E', 'N', 'R', 'Q', 'N', 'T', 'E', 'I', 'F'];
+  });
+  const [isAdminMode, setIsAdminMode] = useState(isAdminFromURL);
   const [tempCenterLetter, setTempCenterLetter] = useState(centerLetter);
   const [tempOuterLetters, setTempOuterLetters] = useState([...outerLetters]);
 
   const handleSaveChanges = () => {
-    setCenterLetter(tempCenterLetter.toUpperCase());
-    setOuterLetters(tempOuterLetters.map(letter => letter.toUpperCase()));
+    const newCenterLetter = tempCenterLetter.toUpperCase();
+    const newOuterLetters = tempOuterLetters.map(letter => letter.toUpperCase());
+    
+    setCenterLetter(newCenterLetter);
+    setOuterLetters(newOuterLetters);
+    
+    // Save to localStorage
+    localStorage.setItem('wordScramble_centerLetter', newCenterLetter);
+    localStorage.setItem('wordScramble_outerLetters', JSON.stringify(newOuterLetters));
+    
     setIsAdminMode(false);
+    // Clear admin URL parameter
+    window.history.replaceState({}, document.title, window.location.pathname);
   };
 
   const handleCancelChanges = () => {
     setTempCenterLetter(centerLetter);
     setTempOuterLetters([...outerLetters]);
     setIsAdminMode(false);
+    // Clear admin URL parameter
+    window.history.replaceState({}, document.title, window.location.pathname);
   };
 
   const handleOuterLetterChange = (index, value) => {
@@ -49,33 +71,58 @@ const WordScramble = () => {
     return (
       <div style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%)',
+        background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
         padding: '16px'
       }}>
         <div style={{ maxWidth: '384px', margin: '0 auto' }}>
+          {/* Admin Header */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '32px',
+            gap: '16px'
+          }}>
+            <button
+              onClick={handleCancelChanges}
+              style={{
+                padding: '12px',
+                background: '#475569',
+                color: 'white',
+                borderRadius: '50%',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              onMouseOver={(e) => e.target.style.background = '#334155'}
+              onMouseOut={(e) => e.target.style.background = '#475569'}
+            >
+              <ArrowLeft size={24} />
+            </button>
+            <h1 style={{
+              fontSize: '32px',
+              fontWeight: 'bold',
+              color: 'white',
+              margin: '0'
+            }}>
+              Admin Panel
+            </h1>
+          </div>
+
           <div style={{
             background: 'white',
             borderRadius: '16px',
             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-            padding: '24px'
+            padding: '32px'
           }}>
-            <h1 style={{
-              fontSize: '24px',
-              fontWeight: 'bold',
-              textAlign: 'center',
-              marginBottom: '24px',
-              color: '#1f2937'
-            }}>
-              Admin Settings
-            </h1>
-            
-            <div style={{ marginBottom: '24px' }}>
+            <div style={{ marginBottom: '32px' }}>
               <label style={{
                 display: 'block',
-                fontSize: '14px',
-                fontWeight: '500',
+                fontSize: '16px',
+                fontWeight: '600',
                 color: '#374151',
-                marginBottom: '8px'
+                marginBottom: '12px'
               }}>
                 Center Letter
               </label>
@@ -85,13 +132,14 @@ const WordScramble = () => {
                 onChange={(e) => setTempCenterLetter(e.target.value.slice(-1).toUpperCase())}
                 style={{
                   width: '100%',
-                  padding: '12px',
-                  border: '2px solid #d1d5db',
-                  borderRadius: '8px',
+                  padding: '16px',
+                  border: '3px solid #d1d5db',
+                  borderRadius: '12px',
                   textAlign: 'center',
-                  fontSize: '20px',
+                  fontSize: '24px',
                   fontWeight: 'bold',
-                  outline: 'none'
+                  outline: 'none',
+                  backgroundColor: '#f9fafb'
                 }}
                 maxLength="1"
                 onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
@@ -99,20 +147,20 @@ const WordScramble = () => {
               />
             </div>
 
-            <div style={{ marginBottom: '24px' }}>
+            <div style={{ marginBottom: '32px' }}>
               <label style={{
                 display: 'block',
-                fontSize: '14px',
-                fontWeight: '500',
+                fontSize: '16px',
+                fontWeight: '600',
                 color: '#374151',
-                marginBottom: '8px'
+                marginBottom: '12px'
               }}>
                 Outer Letters
               </label>
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: '8px'
+                gap: '12px'
               }}>
                 {tempOuterLetters.map((letter, index) => (
                   <input
@@ -121,13 +169,14 @@ const WordScramble = () => {
                     value={letter}
                     onChange={(e) => handleOuterLetterChange(index, e.target.value)}
                     style={{
-                      padding: '12px',
-                      border: '2px solid #d1d5db',
-                      borderRadius: '8px',
+                      padding: '16px',
+                      border: '3px solid #d1d5db',
+                      borderRadius: '12px',
                       textAlign: 'center',
-                      fontSize: '18px',
+                      fontSize: '20px',
                       fontWeight: 'bold',
-                      outline: 'none'
+                      outline: 'none',
+                      backgroundColor: '#f9fafb'
                     }}
                     maxLength="1"
                     onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
@@ -141,18 +190,19 @@ const WordScramble = () => {
               onClick={generateRandomLetters}
               style={{
                 width: '100%',
-                marginBottom: '16px',
+                marginBottom: '24px',
                 background: '#8b5cf6',
                 color: 'white',
                 fontWeight: 'bold',
-                padding: '12px 16px',
-                borderRadius: '8px',
+                padding: '16px 20px',
+                borderRadius: '12px',
                 border: 'none',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '8px'
+                gap: '12px',
+                fontSize: '16px'
               }}
               onMouseOver={(e) => e.target.style.background = '#7c3aed'}
               onMouseOut={(e) => e.target.style.background = '#8b5cf6'}
@@ -161,7 +211,7 @@ const WordScramble = () => {
               Generate Random Letters
             </button>
 
-            <div style={{ display: 'flex', gap: '12px' }}>
+            <div style={{ display: 'flex', gap: '16px' }}>
               <button
                 onClick={handleCancelChanges}
                 style={{
@@ -169,10 +219,11 @@ const WordScramble = () => {
                   background: '#6b7280',
                   color: 'white',
                   fontWeight: 'bold',
-                  padding: '12px 16px',
-                  borderRadius: '8px',
+                  padding: '16px 20px',
+                  borderRadius: '12px',
                   border: 'none',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  fontSize: '16px'
                 }}
                 onMouseOver={(e) => e.target.style.background = '#4b5563'}
                 onMouseOut={(e) => e.target.style.background = '#6b7280'}
@@ -186,20 +237,21 @@ const WordScramble = () => {
                   background: '#10b981',
                   color: 'white',
                   fontWeight: 'bold',
-                  padding: '12px 16px',
-                  borderRadius: '8px',
+                  padding: '16px 20px',
+                  borderRadius: '12px',
                   border: 'none',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '8px'
+                  gap: '12px',
+                  fontSize: '16px'
                 }}
                 onMouseOver={(e) => e.target.style.background = '#059669'}
                 onMouseOut={(e) => e.target.style.background = '#10b981'}
               >
                 <Save size={20} />
-                Save
+                Save Changes
               </button>
             </div>
           </div>
@@ -218,7 +270,7 @@ const WordScramble = () => {
         {/* Header */}
         <div style={{
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
           alignItems: 'center',
           marginBottom: '32px'
         }}>
@@ -266,22 +318,6 @@ const WordScramble = () => {
               }}>Scramble</h2>
             </div>
           </div>
-          <button
-            onClick={() => setIsAdminMode(true)}
-            style={{
-              padding: '12px',
-              background: '#3b82f6',
-              color: 'white',
-              borderRadius: '50%',
-              border: 'none',
-              cursor: 'pointer',
-              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-            }}
-            onMouseOver={(e) => e.target.style.background = '#2563eb'}
-            onMouseOut={(e) => e.target.style.background = '#3b82f6'}
-          >
-            <Settings size={24} />
-          </button>
         </div>
 
         {/* Game Board */}
@@ -404,22 +440,16 @@ const WordScramble = () => {
           background: 'white',
           borderRadius: '12px',
           boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-          padding: '16px'
+          padding: '16px',
+          textAlign: 'center'
         }}>
-          <h2 style={{
-            fontSize: '18px',
-            fontWeight: '600',
-            color: '#1f2937',
-            marginBottom: '8px',
-            margin: '0 0 8px 0'
-          }}>How to Play</h2>
           <p style={{
-            color: '#6b7280',
-            fontSize: '14px',
+            color: '#1f2937',
+            fontSize: '18px',
+            fontWeight: 'bold',
             margin: '0'
           }}>
-            Create words using the letters from the wheel. Every word must include the center letter ({centerLetter}). 
-            Tap the settings icon to change letters for a new game.
+            Unscramble words from the Word wheel
           </p>
         </div>
       </div>
