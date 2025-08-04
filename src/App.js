@@ -72,20 +72,20 @@ const WordScramble = () => {
       <div style={{
         minHeight: '100vh',
         background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
-        padding: '16px'
+        padding: '12px'
       }}>
-        <div style={{ maxWidth: '384px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '320px', margin: '0 auto' }}>
           {/* Admin Header */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            marginBottom: '32px',
-            gap: '16px'
+            marginBottom: '20px',
+            gap: '12px'
           }}>
             <button
               onClick={handleCancelChanges}
               style={{
-                padding: '12px',
+                padding: '8px',
                 background: '#475569',
                 color: 'white',
                 borderRadius: '50%',
@@ -98,10 +98,10 @@ const WordScramble = () => {
               onMouseOver={(e) => e.target.style.background = '#334155'}
               onMouseOut={(e) => e.target.style.background = '#475569'}
             >
-              <ArrowLeft size={24} />
+              <ArrowLeft size={20} />
             </button>
             <h1 style={{
-              fontSize: '32px',
+              fontSize: '24px',
               fontWeight: 'bold',
               color: 'white',
               margin: '0'
@@ -112,17 +112,17 @@ const WordScramble = () => {
 
           <div style={{
             background: 'white',
-            borderRadius: '16px',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-            padding: '32px'
+            borderRadius: '12px',
+            boxShadow: '0 20px 40px -12px rgba(0, 0, 0, 0.25)',
+            padding: '20px'
           }}>
-            <div style={{ marginBottom: '32px' }}>
+            <div style={{ marginBottom: '20px' }}>
               <label style={{
                 display: 'block',
-                fontSize: '16px',
+                fontSize: '14px',
                 fontWeight: '600',
                 color: '#374151',
-                marginBottom: '12px'
+                marginBottom: '8px'
               }}>
                 Center Letter
               </label>
@@ -132,11 +132,11 @@ const WordScramble = () => {
                 onChange={(e) => setTempCenterLetter(e.target.value.slice(-1).toUpperCase())}
                 style={{
                   width: '100%',
-                  padding: '16px',
-                  border: '3px solid #d1d5db',
-                  borderRadius: '12px',
+                  padding: '12px',
+                  border: '2px solid #d1d5db',
+                  borderRadius: '8px',
                   textAlign: 'center',
-                  fontSize: '24px',
+                  fontSize: '18px',
                   fontWeight: 'bold',
                   outline: 'none',
                   backgroundColor: '#f9fafb'
@@ -147,20 +147,20 @@ const WordScramble = () => {
               />
             </div>
 
-            <div style={{ marginBottom: '32px' }}>
+            <div style={{ marginBottom: '20px' }}>
               <label style={{
                 display: 'block',
-                fontSize: '16px',
+                fontSize: '14px',
                 fontWeight: '600',
                 color: '#374151',
-                marginBottom: '12px'
+                marginBottom: '8px'
               }}>
                 Outer Letters
               </label>
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: '12px'
+                gap: '8px'
               }}>
                 {tempOuterLetters.map((letter, index) => (
                   <input
@@ -169,11 +169,11 @@ const WordScramble = () => {
                     value={letter}
                     onChange={(e) => handleOuterLetterChange(index, e.target.value)}
                     style={{
-                      padding: '16px',
-                      border: '3px solid #d1d5db',
-                      borderRadius: '12px',
+                      padding: '10px',
+                      border: '2px solid #d1d5db',
+                      borderRadius: '8px',
                       textAlign: 'center',
-                      fontSize: '20px',
+                      fontSize: '16px',
                       fontWeight: 'bold',
                       outline: 'none',
                       backgroundColor: '#f9fafb'
@@ -190,28 +190,28 @@ const WordScramble = () => {
               onClick={generateRandomLetters}
               style={{
                 width: '100%',
-                marginBottom: '24px',
+                marginBottom: '16px',
                 background: '#8b5cf6',
                 color: 'white',
                 fontWeight: 'bold',
-                padding: '16px 20px',
-                borderRadius: '12px',
+                padding: '12px 16px',
+                borderRadius: '8px',
                 border: 'none',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '12px',
-                fontSize: '16px'
+                gap: '8px',
+                fontSize: '14px'
               }}
               onMouseOver={(e) => e.target.style.background = '#7c3aed'}
               onMouseOut={(e) => e.target.style.background = '#8b5cf6'}
             >
-              <RotateCcw size={20} />
+              <RotateCcw size={18} />
               Generate Random Letters
             </button>
 
-            <div style={{ display: 'flex', gap: '16px' }}>
+            <div style={{ display: 'flex', gap: '12px' }}>
               <button
                 onClick={handleCancelChanges}
                 style={{
@@ -219,11 +219,11 @@ const WordScramble = () => {
                   background: '#6b7280',
                   color: 'white',
                   fontWeight: 'bold',
-                  padding: '16px 20px',
-                  borderRadius: '12px',
+                  padding: '12px 16px',
+                  borderRadius: '8px',
                   border: 'none',
                   cursor: 'pointer',
-                  fontSize: '16px'
+                  fontSize: '14px'
                 }}
                 onMouseOver={(e) => e.target.style.background = '#4b5563'}
                 onMouseOut={(e) => e.target.style.background = '#6b7280'}
@@ -237,21 +237,21 @@ const WordScramble = () => {
                   background: '#10b981',
                   color: 'white',
                   fontWeight: 'bold',
-                  padding: '16px 20px',
-                  borderRadius: '12px',
+                  padding: '12px 16px',
+                  borderRadius: '8px',
                   border: 'none',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '12px',
-                  fontSize: '16px'
+                  gap: '8px',
+                  fontSize: '14px'
                 }}
                 onMouseOver={(e) => e.target.style.background = '#059669'}
                 onMouseOut={(e) => e.target.style.background = '#10b981'}
               >
-                <Save size={20} />
-                Save Changes
+                <Save size={16} />
+                Save
               </button>
             </div>
           </div>
